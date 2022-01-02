@@ -1,0 +1,5 @@
+echo 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
+git add *
+git commit -m "Initial files generated"
+git remote set-url origin https://github.com/rahul2512/MSK_ML_codes
+git push -u origin master

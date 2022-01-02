@@ -1,0 +1,170 @@
+MuscleAct
+Initialised logistic regression network
+Plot created for the following index ---  MuscleAct 0
+
+ plotting results -----------------------
+nan nan PC Test_MuscleAct_0_scaled_out
+1.901 1.0137716705451973 RMSE Test_MuscleAct_0_scaled_out
+----------------------------------- 
+
+MuscleAct
+Initialised logistic regression network
+Plot created for the following index ---  MuscleAct 0
+
+ plotting results -----------------------
+nan nan PC Test_MuscleAct_0_scaled_out
+1.88475 1.0162817953205694 RMSE Test_MuscleAct_0_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  Angles 0
+
+ plotting results -----------------------
+nan nan PC Test_Angles_0_scaled_out
+1.1517 0.6357699348034633 RMSE Test_Angles_0_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  Angles 0
+
+ plotting results -----------------------
+nan nan PC Test_Angles_0_scaled_out
+1.2409 0.675308736801176 RMSE Test_Angles_0_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JM 0
+
+ plotting results -----------------------
+nan nan PC Test_JM_0_scaled_out
+2.9414000000000002 2.7627344135837597 RMSE Test_JM_0_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JM 0
+
+ plotting results -----------------------
+0.29100000000000004 0.3591503863286242 PC Test_JM_0_scaled_out
+2.951 2.7944910091106037 RMSE Test_JM_0_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JRF 0
+
+ plotting results -----------------------
+0.20666666666666667 0.2840872322994393 PC Test_JRF_0_scaled_out
+1.97625 1.5198358532530192 RMSE Test_JRF_0_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JRF 0
+
+ plotting results -----------------------
+nan nan PC Test_JRF_0_scaled_out
+1.9447499999999998 1.5212091202395543 RMSE Test_JRF_0_scaled_out
+----------------------------------- 
+
+Muscle
+Initialised logistic regression network
+Plot created for the following index ---  Muscle 0
+
+ plotting results -----------------------
+nan nan PC Test_Muscle_0_scaled_out
+1.6595 1.010487629810479 RMSE Test_Muscle_0_scaled_out
+----------------------------------- 
+
+Muscle
+Initialised logistic regression network
+Plot created for the following index ---  Muscle 0
+
+ plotting results -----------------------
+-0.1175 0.05889609494694873 PC Test_Muscle_0_scaled_out
+1.6992500000000001 0.9557181527521595 RMSE Test_Muscle_0_scaled_out
+----------------------------------- 
+
+MuscleAct
+Initialised logistic regression network
+Plot created for the following index ---  MuscleAct 1
+
+ plotting results -----------------------
+nan nan PC Test_MuscleAct_1_scaled_out
+1.89675 1.0180656597194504 RMSE Test_MuscleAct_1_scaled_out
+----------------------------------- 
+
+MuscleAct
+Initialised logistic regression network
+Plot created for the following index ---  MuscleAct 1
+
+ plotting results -----------------------
+0.2625 0.16618889854620256 PC Test_MuscleAct_1_scaled_out
+1.9212500000000001 0.9867900929275689 RMSE Test_MuscleAct_1_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  Angles 1
+
+ plotting results -----------------------
+nan nan PC Test_Angles_1_scaled_out
+1.2028 0.602420085986515 RMSE Test_Angles_1_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  Angles 1
+
+ plotting results -----------------------
+nan nan PC Test_Angles_1_scaled_out
+1.1765 0.6049782227485548 RMSE Test_Angles_1_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JM 1
+
+ plotting results -----------------------
+nan nan PC Test_JM_1_scaled_out
+2.9414 2.7640807224102555 RMSE Test_JM_1_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JM 1
+
+ plotting results -----------------------
+nan nan PC Test_JM_1_scaled_out
+2.9548999999999994 2.7924455751186987 RMSE Test_JM_1_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JRF 1
+
+ plotting results -----------------------
+nan nan PC Test_JRF_1_scaled_out
+1.9695 1.5250890411163978 RMSE Test_JRF_1_scaled_out
+----------------------------------- 
+
+Initialised logistic regression network
+Plot created for the following index ---  JRF 1
+
+ plotting results -----------------------
+0.16916666666666666 0.25473706487714387 PC Test_JRF_1_scaled_out
+1.9598333333333338 1.5069915855401745 RMSE Test_JRF_1_scaled_out
+----------------------------------- 
+
+Muscle
+Initialised logistic regression network
+Plot created for the following index ---  Muscle 1
+
+ plotting results -----------------------
+nan nan PC Test_Muscle_1_scaled_out
+1.6007500000000001 1.0585668082364947 RMSE Test_Muscle_1_scaled_out
+----------------------------------- 
+
+Muscle
+Initialised logistic regression network
+Plot created for the following index ---  Muscle 1
+
+ plotting results -----------------------
+nan nan PC Test_Muscle_1_scaled_out
+1.714 0.9431397033313782 RMSE Test_Muscle_1_scaled_out
+----------------------------------- 
+
+MuscleAct
+Initialised logistic regression network
