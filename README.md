@@ -1,7 +1,16 @@
 # MSK_ML_codes
 # This file contains the code description used in the article: "Machine Learning for Musculoskeletal Modeling of Upper Extremity"
-# The cross-validation runs for this work are done on clusters and therefore, the code may require some changes to run on laptop. Final model training runs can be easily done on normal laptop. 
+# The codes are developed in python3 using standard python modules and keras for ML. 
+
+# The code here contains:
+#a) Pipeline to run ML methods such NN, LM which can be easily extended for other methods. 
+#b) We have used this pipeline to run cross-validation on cluster. Therefore, to run on laptop may require slight tweak in the code. 
+#c) Final training and testing can be easily done on any laptop/computer. 
+#d) Code for analysis and plotting is also provided. 
+
+
+
+
 # Test data for reproducing the results are provided here. The full training can be obtained on request to vikranth.harthikotenagaraja@eng.ox.ac.uk
 
-# The codes are developed on python3 using standard python modules and keras for ML. 
-# 
+ 
