@@ -20,8 +20,10 @@ The codes are developed using Python 3 with [keras](https://keras.io) for ML.
 #c) Final training and testing can be easily done on any laptop/computer. 
 #d) Code for analysis and plotting is also provided. 
 
-
-
+# Code description
+#pytorch_utilities.py -- contains function for various models (Linear, Neural Network, ....) and generate a file with hyperparameters choices
+#pytorch.py -- several functions to handle data, perform cross-validation, train model, forward pass, plot and analyse results
+#analysis*py -- perform cross-validation 
 
 # Test data for reproducing the results are provided here. The full training can be obtained on request to vikranth.harthikotenagaraja@eng.ox.ac.uk
 
