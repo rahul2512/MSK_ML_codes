@@ -28,7 +28,9 @@ The codes are developed using Python 3 with [keras](https://keras.io) for ML.
 #analysis*py -- perform cross-validation 
 #plot_results.py -- contains function to estimate validation accuracy, find best hyper-parameters, train final model, plot results and compute statistics 
 
-# Test data for reproducing the results are provided here. The full training can be obtained on request to vikranth.harthikotenagaraja@eng.ox.ac.uk
+# final trained NN model 
+#Files are heavy to upload, can be downloaded from here: https://www.dropbox.com/sh/i4aw49l5o6jwys4/AACpwYq0uHefITa96dvHpxnNa?dl=0
 
- 
->>>>>>> main
+# Test data for reproducing the results are provided here, https://www.dropbox.com/sh/6xcandf8qmrs8xc/AADG1xTp7TtwpfTrQYqbzUzDa?dl=0. The full training can be obtained on request to vikranth.harthikotenagaraja@eng.ox.ac.uk
+
+ >>>>>>> main
