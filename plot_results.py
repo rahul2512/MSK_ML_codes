@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd, keras
 import os.path
 from pathlib import Path
-from pytorch import run_final_model, run_cross_valid, plot_saved_model, plot_saved_model2
+from pytorch import run_final_model, run_cross_valid, plot_saved_model
 from pytorch_utilities import hyper_param
 
 hyper =  pd.read_csv('hyperparam.txt',delimiter='\s+')
-hyper =  pd.read_csv('hyperparam_linear.txt',delimiter='\s+')
+#hyper =  pd.read_csv('hyperparam_linear.txt',delimiter='\s+')
 
 def read_k_fold_data(f):
 	data = {}
@@ -118,26 +118,25 @@ def stat_basic_models(model_class):
 
     for cat in ['MuscleAct','Angles','JM','JRF','Muscle']:
         for sub in ['subject_naive','subject_exposed']:
-            for ind in range(54):
+            for ind in range(1):
                 train_final_model(sub,ind,cat,True,False,model_class)
+                input()
+#stat_basic_models('Linear')
 
-# stat_basic_models('Linear')
-
-
-# train_final_model(27006,'Muscle',scale_out=True)
 
 
 ###########################  
 # plot final saved model 
 ###########################  
-# plot_saved_model('subject_exposed','MuscleAct',4397,hyper.iloc[4397],False,True)
-# plot_saved_model('subject_naive','MuscleAct',9438,hyper.iloc[9438],False,True)
+#plot_saved_model(which, hyper_arg1, hyper_val1, hyper_arg2, hyper_val2, pca,scale_out,model_class):
 
 def plot_figures_in_article():
-    # plot_saved_model2('JM',5237,hyper.iloc[5237],3072,hyper.iloc[3072],False,True)
-    # plot_saved_model2('JRF', 11742,hyper.iloc[11742],1626,hyper.iloc[1626],False,True)
-    # plot_saved_model2('Muscle',4719,hyper.iloc[4719],8477,hyper.iloc[8477],False,True)
-    # plot_saved_model2('Angles',2706,hyper.iloc[2706],545,hyper.iloc[545],False,True)
-    plot_saved_model2('MuscleAct',4397,hyper.iloc[4397],9906,hyper.iloc[9906],False,True)
+    plot_saved_model('JM',5237,hyper.iloc[5237],3072,hyper.iloc[3072],False,True,'NN')
+    plot_saved_model('JRF', 11742,hyper.iloc[11742],1626,hyper.iloc[1626],False,True,'NN')
+    plot_saved_model('Muscle',4719,hyper.iloc[4719],8477,hyper.iloc[8477],False,True,'NN')
+    plot_saved_model('Angles',2706,hyper.iloc[2706],545,hyper.iloc[545],False,True,'NN')
+    plot_saved_model('MuscleAct',4397,hyper.iloc[4397],9438,hyper.iloc[9438],False,True,'NN')
 
-# plot_figures_in_article()
+plot_figures_in_article()
+
+

@@ -47,7 +47,7 @@ def scale_output(Y_train,Y_test):  #scale the output features
     std = tmp1.std()
     ttt = Y_train.append(Y_test)
     Y_train,Y_test = Y_train/std, Y_test/std
-    return Y_train,Y_test
+    return Y_train,Y_test, std
 
 def smooth_input(X_train,X_test):  ### not using this in the final version
     #filtered using a fourth- order, zero-lag, low-pass Butterworth filter with a cut-off frequency of 6 Hz
@@ -126,13 +126,13 @@ def read_total_data(subject_condition,which,pca,scale_out):
         Y_test = tmp
     # X_train,X_test = smooth_input(X_train,X_test)  ### note that need to smoothen it for each trial
     if scale_out ==True:
-        Y_train,Y_test = scale_output(Y_train,Y_test)
+        Y_train,Y_test,sca = scale_output(Y_train,Y_test)
 
     if pca == True:
         X_train_pca,X_test_pca = reduce_dim_pca(X_train,X_test)
         return X_train, Y_train, X_test, Y_test, X_train_pca,X_test_pca
     else:
-        return X_train, Y_train, X_test, Y_test
+        return X_train, Y_train, X_test, Y_test,sca
 
 
 def split_validation_data(subject_condition,which,pca,scale_out,k_fold_index):
@@ -174,135 +174,29 @@ def split_validation_data(subject_condition,which,pca,scale_out,k_fold_index):
     
         return X_Train, Y_Train, X_val, Y_val, X_test, Y_test
 
-
-def combined_plot(subject_condition,model,X1,Y2,label,scale_out,model_class):   ### this code is not used for final results but useful to plot all the trials
+    
+def combined_plot(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_out,model_class,sc1,sc2):
     ## Need to think about computing each trial separately and how that affects the output
-    print("\n plotting results -----------------------")
-    RMSE_list, PC_list = [],[]
-    Y1 = model.predict(X1)
-    Y1,Y2 = np.array(Y1),np.array(Y2) 
-    a,b = np.shape(Y1)
-    #### the below loop is to set the time in terms of percentage of task
-    count,aa = -1,[]
-    df = X1[484]
-    zero_entries = np.where(df==0)
-    zero_entries = np.concatenate([zero_entries[0],np.array([a])])   #### adding last element
-    plot_list = ['(a)','(b)','(c)','(d)','(e)','(f)','(g)','(h)','(i)','(j)','(k)','(l)']
-    for u in df:
-        if u == 0:
-            count = count + 1
-        aa.append(u+count)
-        
-    if 'JRF' in label:
-        fig, ax = plt.subplots(4,3)
-        ax_list = [ax[0,0],ax[0,1],ax[0,2] ,ax[1,0],ax[1,1],ax[1,2], ax[2,0],ax[2,1],ax[2,2],  ax[3,0],ax[3,1],ax[3,2]]
-        ss,b_xlabel = 4,8
-        ylabel = [ 'Trunk \n Mediolateral', 'Trunk \n Proximodistal', 'Trunk \n Anteroposterior', 'Shoulder \n Mediolateral',
-                  'Shoulder \n Proximodistal', 'Shoulder \n Anteroposterior', 'Elbow \n Mediolateral', 'Elbow \n Proximodistal',
-                  'Elbow \n Anteroposterior', 'Wrist \n Mediolateral', 'Wrist \n Proximodistal', 'Wrist \n Anteroposterior']
-
-    elif 'Muscle' in label:
-        fig, ax = plt.subplots(2,2)
-        ax_list = [ax[0,0],ax[0,1],ax[1,0] ,ax[1,1]]
-        ss,b_xlabel = 6,1
-        ylabel = ['Pectoralis major \n (Clavicle)','Biceps Brachii','Deltoid (Medial)','Brachioradialis']
-
-
-    elif 'JM' or 'Angles' in label:
-        fig, ax = plt.subplots(4,3)
-        ax_list = [ax[0,1] ,ax[1,0],ax[1,1],ax[1,2], ax[2,0],ax[2,1],ax[2,2],  ax[3,0],ax[3,1],ax[3,2],ax[0,0],ax[0,1]]
-        ss,b_xlabel = 4,6
-        fig.delaxes(ax[0,2])
-        fig.delaxes(ax[0,0])
-
-    if 'JM' in label:
-        ylabel = [ 'Trunk \n Flexion/Extension', 'Trunk Internal/ \n External Rotation', 'Trunk Right/ \n Left Bending',
-                  'Shoulder \n Flexion/Extension', 'Shoulder \n Abduction/Adduction', 'Shoulder Internal/ \n External Rotation',
-                  'Elbow \n Flexion/Extension', 'Elbow \n Pronation/Supination', 'Wrist \n Flexion/Extension', 'Wrist \n Radial/Ulnar Deviation']
-        
-    if 'Angles' in label:
-        ylabel = ['Shoulder \n Flexion/Extension', 'Shoulder \n Abduction/Adduction', 'Shoulder \n Internal/External Rotation', 
-                  'Elbow \n Flexion/Extension', 'Elbow \n Pronation/Supination', 'Wrist \n Flexion/Extension', 'Wrist Radial/ \n Ulnar Deviation', 
-                  'Trunk Forward/ \n Backward Bending', 'Trunk Right/ \n Left Bending', 'Trunk Internal/ \n External Rotation']
-
-    for i in range(b):
-        Title,NRMSE,push_plot = 0,0,0
-        for c in range(count+1):    ########## this loop is required to separate trials
-            ttmmpp = np.arange(zero_entries[c],zero_entries[c+1])
-            ax_list[i].plot([aa[q] + push_plot for q in ttmmpp] ,Y1[ttmmpp,i],color='red',lw=0.5)#,label=label1)   ### np.arange(a)
-            ax_list[i].plot([aa[q] + push_plot for q in ttmmpp] ,Y2[ttmmpp,i],color='blue',lw=0.5)#,label=label2)
-            Title = Title + scipy.stats.pearsonr(Y1[ttmmpp,i],Y2[ttmmpp,i])[0]
-            NRMSE  = NRMSE + mean_squared_error(Y1[ttmmpp,i],Y2[ttmmpp,i],squared=False)
-            push_plot = push_plot + 0.1
-        push2 = 0.05
-        for u in range(1,count+1):
-            ax_list[i].axvline(u+push2,ls='--',lw=0.1,color='k')
-            push2=push2+0.1
-        ax_list[i].set_xlim(0,count+1)
-        ind = ['Trial '+str(i+1) for i in range(count+1)]
-        Title = np.around(Title/(count+1),2)
-        NRMSE = np.around(NRMSE/(count+1),3)
-        PC_list.append(Title)
-        RMSE_list.append(NRMSE)
-        if scale_out == False:
-            NRMSE = NRMSE/scipy.stats.iqr(Y2[:,i])
-        Title = "$PC_{avg}$ = " + str(Title) + ", $RMSE_{avg}$ = " + str(NRMSE)
-        ax_list[i].text(0.2, 1, Title, transform=ax_list[i].transAxes, size=ss,fontweight='bold')
-        ax_list[i].text(-0.16,1, plot_list[i], transform=ax_list[i].transAxes, size=ss,fontweight='bold')
-        minor_ticks = [] 
-        percent = ['0%','25%','50%','75%','100%']
-        push3 = 0
-        for sm in range(count+1):
-            for sm1 in np.arange(sm,sm+1.25,0.25):
-                minor_ticks.append(sm1+push3)
-            push3=push3+0.1
-        ax_list[i].set_xticks(minor_ticks ,minor=True)
-        ax_list[i].set_xticks(np.array(minor_ticks[2::5])+0.0005,minor=False)
-        ax_list[i].set_ylabel(ylabel[i],fontsize=ss)
-
-        ax_list[i].spines['top'].set_visible(False)
-        ax_list[i].spines['right'].set_visible(False)
-        if i > b_xlabel:
-            ax_list[i].set_xticklabels(ind,fontsize=ss,minor=False)
-            ax_list[i].set_xticklabels(percent*(count+1),fontsize=ss,minor=True,rotation=90)
-            ax_list[i].set_xlabel("% task completion",fontsize=ss)
-        else:
-            ax_list[i].set_xticklabels([],fontsize=ss,minor=False)
-        # ax_list[i].legend(fontsize=ss,loc='upper center',fancybox=True,ncol=2, frameon=True,framealpha=1, bbox_to_anchor=(0.5, 1.06))
-        ax_list[i].tick_params(axis='x', labelsize=ss,   pad=14,length=3,width=0.5,direction= 'inout',which='major')
-        ax_list[i].tick_params(axis='x', labelsize=ss-1, pad=2, length=2,width=0.5,direction= 'inout',which='minor')
-        ax_list[i].tick_params(axis='y', labelsize=ss,   pad=3, length=3,width=0.5,direction= 'inout')
-    fig.subplots_adjust(wspace=0.1,hspace=0.005)
-    plt.tight_layout()
-    if scale_out == True:
-        label = label + '_scaled_out'
-    plt.savefig('./plots_out/'+model_class+'_'+subject_condition+'_'+label+'_combine'+'.pdf',dpi=600)
-    plt.close()
-    print(np.mean(PC_list),np.std(PC_list),'PC',label)
-    print(np.mean(RMSE_list),np.std(RMSE_list),'RMSE',label)
-        
-    
-    
-#####################################    
-#####################################    
-#####################################    
-#####################################    
-#####################################    
-#####################################    
-    
-    
-def combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_out,model_class):
-    ## Need to think about computing each trial separately and how that affects the output
-    print("\n plotting results -----------------------")
-    RMSE_list, PC_list = [],[]
+    NRMSE_list,  PC_list  = [],[]
+    NRMSE2_list, PC2_list = [],[]
     YP1, YP2 = model1.predict(X_Test1), model2.predict(X_Test2)
     YT1, YT2 = np.array(Y_Test1),np.array(Y_Test2) 
     a,b = np.shape(YT1)
+    a2,b2 = np.shape(YT2)
+    sc1,sc2 = sc1.to_numpy(),sc2.to_numpy()
+    if 'MuscleAct' in label:
+        sc1,sc2 = sc1*100,sc2*100
+    YP1, YT1 = YP1*sc1, YT1*sc1
+    YP2, YT2 = YP2*sc2, YT2*sc2
     #### the below loop is to set the time in terms of percentage of task
     count,aa = -1,[]
     df = X_Test1[484]
     zero_entries = np.where(df==0)
     zero_entries = np.concatenate([zero_entries[0],np.array([a])])   #### adding last element
+    df2 = X_Test2[484]
+    zero_entries2 = np.where(df2==0)
+    zero_entries2 = np.concatenate([zero_entries2[0],np.array([a2])])   #### adding last element
+
     for u in df:
         if u == 0:
             count = count + 1
@@ -351,7 +245,7 @@ def combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_ou
     elif 'Muscle' in label:
         fig = plt.figure(figsize=(8,4))
         gs1 = gridspec.GridSpec(215, 560)
-        gs1.update(left=0.05, right=0.98,top=0.84, bottom=0.15)
+        gs1.update(left=0.07, right=0.98,top=0.84, bottom=0.15)
         d1, d2 =10, 10
         ax00 = plt.subplot(gs1[0:100 -d2    , 0+d1:100  ])
         ax01 = plt.subplot(gs1[0:100 -d2   , 150+d1:250 ])
@@ -373,7 +267,7 @@ def combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_ou
     elif 'JM' in label:
         fig = plt.figure(figsize=(8,8.25))
         gs1 = gridspec.GridSpec(580, 560)
-        gs1.update(left=0.065, right=0.98,top=0.945, bottom=0.08)
+        gs1.update(left=0.075, right=0.98,top=0.945, bottom=0.08)
         d1, d2 =10, 10
         ax00 = plt.subplot(gs1[  0+d2:100  ,   0+d1:100 ])
         ax01 = plt.subplot(gs1[  0+d2:100  , 150+d1:250 ])
@@ -451,13 +345,41 @@ def combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_ou
                   'Shoulder Flexion / \n Extension', 'Shoulder Abduction / \n Adduction', 'Shoulder Internal / \n External Rotation', 
                   'Elbow Flexion / \n Extension', 'Elbow Pronation / \n Supination', 'Wrist Flexion / \n Extension', 'Wrist Radial / \n Ulnar Deviation']
 
+     ######following loop computes stats
+    for i in range(b):
+        count = 2   ## computing for all trials
+        for c in range(count+1):    ########## this loop is required to separate trials
+            if c < 2:
+                ttmmpp = np.arange(zero_entries[c],zero_entries[c+1])
+                PC =  scipy.stats.pearsonr(YP1[ttmmpp,i],YT1[ttmmpp,i])[0]
+                NRMSE =  mean_squared_error(YP1[ttmmpp,i], YT1[ttmmpp,i],squared=False)/sc1[i]
+                NRMSE_list.append(NRMSE)
+                PC_list.append(PC)
+
+            ttmmpp2 = np.arange(zero_entries2[c],zero_entries2[c+1])
+            PC2  = scipy.stats.pearsonr(YP2[ttmmpp2,i],YT2[ttmmpp2,i])[0]
+            NRMSE2  =  mean_squared_error(YP2[ttmmpp2,i], YT2[ttmmpp2,i],squared=False)/sc2[i]
+            NRMSE2_list.append(NRMSE2)
+            PC2_list.append(PC2)
+    NRMSE_list = np.around(NRMSE_list,2)
+    NRMSE2_list = np.around(NRMSE2_list,2)
+    PC_list  = np.around(PC_list,2)
+    PC2_list = np.around(PC2_list,2)
+    print("Printing statisics for ----", label, "mean, std, max, min, iqr")
+    print(np.around(np.mean(PC_list),2),' & ' ,  np.around(np.std(PC_list),2),' & ' , np.around(np.max(PC_list),2),' & ' , np.around(np.min(PC_list),2),' & ' ,  np.around(scipy.stats.iqr(PC_list),2),' & ' , 'PC Exposed')    
+    print(np.around(np.mean(NRMSE_list),2),' & ' , np.around(np.std(NRMSE_list),2),' & ' , np.around(np.max(NRMSE_list),2),' & ' , np.around(np.min(NRMSE_list),2),' & ' ,  np.around(scipy.stats.iqr(NRMSE_list),2), 'NRMSE2 exposed')    
+
+    print(np.around(np.mean(PC2_list),2),' & ' , np.around(np.std(PC2_list),2),' & ' , np.around(np.max(PC2_list),2),' & ' , np.around(np.min(PC2_list),2),' & ' ,  np.around(scipy.stats.iqr(PC2_list),2),' & ' , 'PC2 Naive')    
+    print(np.around(np.mean(NRMSE2_list),2),' & ' , np.around(np.std(NRMSE2_list),2),' & ' , np.around(np.max(NRMSE2_list),2),' & ' , np.around(np.min(NRMSE2_list),2),' & ' ,  np.around(scipy.stats.iqr(NRMSE2_list),2), 'NRMSE2 Naive')    
+    
     sparse_plot=5
     for i in range(b):
-        Title,NRMSE,push_plot = 0,0,0
-        Title2,NRMSE2,push_plot = 0,0,0
+        push_plot = 0
+        count = 0   ## plotting first trial
         for c in range(count+1):    ########## this loop is required to separate trials
             ttmmpp = np.arange(zero_entries[c],zero_entries[c+1])
-
+            ttmmpp2 = np.arange(zero_entries2[c],zero_entries2[c+1])
+            
             if ax_list[i] == ax00:
                 label1, label2 = 'NN prediction', 'MSK model output'
             else:
@@ -466,15 +388,18 @@ def combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_ou
             ax_list[i].plot([aa[q] + push_plot for q in ttmmpp][::sparse_plot] ,YP1[ttmmpp,i][::sparse_plot],color='red', lw=0.8,label=label1)   ### np.arange(a)
             ax_list[i].plot([aa[q] + push_plot for q in ttmmpp][::sparse_plot] ,YT1[ttmmpp,i][::sparse_plot],color='blue',lw=0.8,label=label2)
 
-            ax_list2[i].plot([aa[q] + push_plot for q in ttmmpp][::sparse_plot] ,YP2[ttmmpp,i][::sparse_plot],color='red', lw=0.8,label ='_no_legend_')#,label=label1)   ### np.arange(a)
-            ax_list2[i].plot([aa[q] + push_plot for q in ttmmpp][::sparse_plot] ,YT2[ttmmpp,i][::sparse_plot],color='blue',lw=0.8,label ='_no_legend_')#,label=label2)
-            Title = Title + scipy.stats.pearsonr(YP1[ttmmpp,i],YT1[ttmmpp,i])[0]
-            NRMSE  = NRMSE + mean_squared_error(YP1[ttmmpp,i], YT1[ttmmpp,i],squared=False)
+            ax_list2[i].plot([aa[q] + push_plot for q in ttmmpp2][::sparse_plot] ,YP2[ttmmpp2,i][::sparse_plot],color='red', lw=0.8,label ='_no_legend_')#,label=label1)   ### np.arange(a)
+            ax_list2[i].plot([aa[q] + push_plot for q in ttmmpp2][::sparse_plot] ,YT2[ttmmpp2,i][::sparse_plot],color='blue',lw=0.8,label ='_no_legend_')#,label=label2)
+            Title =  scipy.stats.pearsonr(YP1[ttmmpp,i],YT1[ttmmpp,i])[0]
+            NRMSE  = mean_squared_error(YP1[ttmmpp,i], YT1[ttmmpp,i],squared=False)
 
-            Title2  = Title2 + scipy.stats.pearsonr(YP2[ttmmpp,i],YT2[ttmmpp,i])[0]
-            NRMSE2  = NRMSE2 + mean_squared_error(YP2[ttmmpp,i], YT2[ttmmpp,i],squared=False)
-
+            Title2  = scipy.stats.pearsonr(YP2[ttmmpp2,i],YT2[ttmmpp2,i])[0]
+            NRMSE2  = mean_squared_error(YP2[ttmmpp2,i], YT2[ttmmpp2,i],squared=False)
+        
             push_plot = push_plot + 0.1
+
+        NRMSE,NRMSE2 = NRMSE/sc1[i],NRMSE2/sc2[i]
+
         push2 = 0.05
         ax_list[i].set_xlim(0,count+1)
         ax_list2[i].set_xlim(0,count+1)
@@ -492,8 +417,8 @@ def combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_ou
         if len(NRMSE2) == 3:
             NRMSE2 = NRMSE2+'0'
 
-        Title = plot_list[i] + "  r = " + Title + ", RMSE = " + NRMSE
-        Title2 = plot_list[i] + "  r = " + Title2 + ", RMSE = " + NRMSE2
+        Title = plot_list[i] + "  r = " + Title + ", NRMSE = " + NRMSE
+        Title2 = plot_list[i] + "  r = " + Title2 + ", NRMSE = " + NRMSE2
         ax_list[i].text(-0.25, 1.1, Title, transform=ax_list[i].transAxes, size=ss)#,fontweight='bold')
         ax_list2[i].text(-0.25, 1.1, Title2, transform=ax_list2[i].transAxes, size=ss)#,fontweight='bold')
         minor_ticks = [] 
@@ -535,7 +460,6 @@ def combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_ou
         ax_list2[i].tick_params(axis='x', labelsize=ss,   pad=14,length=3,width=0.5,direction= 'inout',which='major')
         ax_list2[i].tick_params(axis='x', labelsize=ss-1, pad=2, length=3,width=0.5,direction= 'inout',which='minor')
         ax_list2[i].tick_params(axis='y', labelsize=ss,   pad=3, length=3,width=0.5,direction= 'inout')
-
 
     if 'JM' in label:
         ax00.legend(fontsize=ss-1,loc='upper center',fancybox=True,ncol=1, frameon=True,framealpha=1, bbox_to_anchor=(3, 1.54))
@@ -623,14 +547,6 @@ def run_final_model(subject_condition,which,hyper_arg,hyper_val,pca,scale_out, m
 	X_Train, Y_Train, X_Test, Y_Test = read_total_data(subject_condition,which,pca,scale_out)
 	model = run_NN(X_Train, Y_Train, X_Test, Y_Test, hyper_val, which, model_class)
 #	save_outputs(subject_condition,model, hyper_val, X_Train, Y_Train,X_Test, Y_Test, X_Test, Y_Test,label='comp'+which+'_hyper_'+str(hyper_arg)+'_')
-	try:
-		print("Plot created for the following index --- ",which,hyper_arg)#,hyper_val)
-# 		combined_plot(subject_condition,model,X_Train,Y_Train,"Train_"+which+"_"+str(hyper_arg),scale_out)
-		combined_plot(subject_condition,model,X_Test,Y_Test,"Test_"+which+"_"+str(hyper_arg),scale_out,model_class)
-		print("-----------------------------------","\n")
-	except:
-		print("this index is creating problem in printing --- ",which,hyper_arg,hyper_val )
-		print("-----------------------------------","\n")
 	return model
 
 def create_final_model(hyper_arg,hyper_val,which,pca,scale_out, model_class):
@@ -643,27 +559,10 @@ def load_model(subject_condition,hyper_arg,which):
     model = keras.models.load_model(path)
     return model
 
-def plot_saved_model(subject_condition,which,hyper_arg,hyper_val,pca,scale_out,model_class):
-	X_Train, Y_Train, X_Test, Y_Test = read_total_data(subject_condition,which,pca,scale_out,model_class)
-	model = load_model(subject_condition,hyper_arg,which)
-	try:
-		print("Plot created for the following index --- ")#,which,hyper_val,hyper_arg)
-# 		combined_plot(subject_condition,model,X_Train,Y_Train,"Train_"+which+"_"+str(hyper_arg),scale_out)
-		combined_plot(subject_condition,model,X_Test,Y_Test,"Test_"+which+"_"+str(hyper_arg),scale_out,model_class)
-		print("-----------------------------------","\n")
-	except:
-		print("this index is creating problem in printing --- ",which,hyper_arg,hyper_val )
-		print("-----------------------------------","\n")
 
-def plot_saved_model2(which, hyper_arg1,hyper_val1, hyper_arg2,hyper_val2, pca,scale_out,model_class):
-	_, _, X_Test1, Y_Test1 = read_total_data('subject_exposed',which,pca,scale_out)
-	_, _, X_Test2, Y_Test2 = read_total_data('subject_naive',which,pca,scale_out)
+def plot_saved_model(which, hyper_arg1,hyper_val1, hyper_arg2,hyper_val2, pca,scale_out,model_class):
+	_, Y_Train1, X_Test1, Y_Test1,sc1 = read_total_data('subject_exposed',which,pca,scale_out)
+	_, Y_Train2, X_Test2, Y_Test2,sc2 = read_total_data('subject_naive',which,pca,scale_out)
 	model1 = load_model('subject_exposed',hyper_arg1,which)
 	model2 = load_model('subject_naive' ,hyper_arg2,which)
-	try:
-		print("Plot created for the following index --- ",which,hyper_arg1,hyper_val1)
-		combined_plot_2(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,"Test_"+which+"_"+str(hyper_arg1)+"_"+str(hyper_arg2),scale_out,model_class)
-		print("-----------------------------------","\n")
-	except:
-		print("this index is creating problem in printing --- ",which,hyper_arg1,hyper_val1 )
-		print("-----------------------------------","\n")
+	combined_plot(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,"Test_"+which+"_"+str(hyper_arg1)+"_"+str(hyper_arg2),scale_out,model_class,sc1,sc2)
