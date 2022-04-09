@@ -2,15 +2,15 @@
 <<<<<<< patch-1
 #Machine Learning for Musculoskeletal Modeling of Upper Extremity
 
-This file contains the code corresponding to the article "Machine Learning for Musculoskeletal Modeling of Upper Extremity".
+#This file contains the code corresponding to the article "Machine Learning for Musculoskeletal Modeling of Upper Extremity".
 
-A cluster was used to run cross-validation, so the code may require some changes to run on a laptop. Final model training can be easily done on a normal laptop using the function "train_final_model" in plot_results.py.
+#A cluster was used to run cross-validation, so the code may require some changes to run on a laptop. Final model training can be easily done on a normal laptop using the function "train_final_model" in plot_results.py.
 
-Lastly, all the plots and statistics provided in the paper can be reproduced by simply running plot_results.py.
+#Lastly, all the plots and statistics provided in the paper can be reproduced by simply running plot_results.py.
 
-Test data for reproducing the results are provided here. The full training dataset can be obtained on request to vikranth.harthikotenagaraja@eng.ox.ac.uk
+#Test data for reproducing the results are provided here. The full training dataset can be obtained on request to vikranth.harthikotenagaraja@eng.ox.ac.uk
 
-The codes are developed using Python 3 with [keras](https://keras.io) for ML.
+#The codes are developed using Python 3 with [keras](https://keras.io) for ML.
 =======
 #MSK_ML_codes
 #This file contains the code description used in the article: "Machine Learning for Musculoskeletal Modeling of Upper Extremity"
