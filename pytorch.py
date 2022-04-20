@@ -179,6 +179,7 @@ def combined_plot(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_out,
     ## Need to think about computing each trial separately and how that affects the output
     NRMSE_list,  PC_list  = [],[]
     NRMSE2_list, PC2_list = [],[]
+    RMSE_list, RMSE2_list = [], [] 
     YP1, YP2 = model1.predict(X_Test1), model2.predict(X_Test2)
     YT1, YT2 = np.array(Y_Test1),np.array(Y_Test2) 
     a,b = np.shape(YT1)
@@ -354,23 +355,34 @@ def combined_plot(model1,model2,X_Test1,Y_Test1,X_Test2,Y_Test2,label,scale_out,
                 PC =  scipy.stats.pearsonr(YP1[ttmmpp,i],YT1[ttmmpp,i])[0]
                 NRMSE =  mean_squared_error(YP1[ttmmpp,i], YT1[ttmmpp,i],squared=False)/sc1[i]
                 NRMSE_list.append(NRMSE)
+                RMSE =  mean_squared_error(YP1[ttmmpp,i], YT1[ttmmpp,i],squared=False)
+                RMSE_list.append(RMSE)
+
                 PC_list.append(PC)
 
             ttmmpp2 = np.arange(zero_entries2[c],zero_entries2[c+1])
             PC2  = scipy.stats.pearsonr(YP2[ttmmpp2,i],YT2[ttmmpp2,i])[0]
             NRMSE2  =  mean_squared_error(YP2[ttmmpp2,i], YT2[ttmmpp2,i],squared=False)/sc2[i]
             NRMSE2_list.append(NRMSE2)
+            RMSE2  =  mean_squared_error(YP2[ttmmpp2,i], YT2[ttmmpp2,i],squared=False)
+            RMSE2_list.append(RMSE2)
             PC2_list.append(PC2)
     NRMSE_list = np.around(NRMSE_list,2)
     NRMSE2_list = np.around(NRMSE2_list,2)
+    RMSE_list = np.around(RMSE_list,2)
+    RMSE2_list = np.around(RMSE2_list,2)
     PC_list  = np.around(PC_list,2)
     PC2_list = np.around(PC2_list,2)
     print("Printing statisics for ----", label, "mean, std, max, min, iqr")
     print(np.around(np.mean(PC_list),2),' & ' ,  np.around(np.std(PC_list),2),' & ' , np.around(np.max(PC_list),2),' & ' , np.around(np.min(PC_list),2),' & ' ,  np.around(scipy.stats.iqr(PC_list),2),' & ' , 'PC Exposed')    
-    print(np.around(np.mean(NRMSE_list),2),' & ' , np.around(np.std(NRMSE_list),2),' & ' , np.around(np.max(NRMSE_list),2),' & ' , np.around(np.min(NRMSE_list),2),' & ' ,  np.around(scipy.stats.iqr(NRMSE_list),2), 'NRMSE2 exposed')    
+    print(np.around(np.mean(NRMSE_list),2),' & ' , np.around(np.std(NRMSE_list),2),' & ' , np.around(np.max(NRMSE_list),2),' & ' , np.around(np.min(NRMSE_list),2),' & ' ,  np.around(scipy.stats.iqr(NRMSE_list),2), 'NRMSE exposed')    
 
     print(np.around(np.mean(PC2_list),2),' & ' , np.around(np.std(PC2_list),2),' & ' , np.around(np.max(PC2_list),2),' & ' , np.around(np.min(PC2_list),2),' & ' ,  np.around(scipy.stats.iqr(PC2_list),2),' & ' , 'PC2 Naive')    
     print(np.around(np.mean(NRMSE2_list),2),' & ' , np.around(np.std(NRMSE2_list),2),' & ' , np.around(np.max(NRMSE2_list),2),' & ' , np.around(np.min(NRMSE2_list),2),' & ' ,  np.around(scipy.stats.iqr(NRMSE2_list),2), 'NRMSE2 Naive')    
+
+    print("below printing RMSE with units")
+    print(np.around(np.mean(RMSE_list),2),' & ' , np.around(np.std(RMSE_list),2),' & ' , np.around(np.max(RMSE_list),2),' & ' , np.around(np.min(RMSE_list),2),' & ' ,  np.around(scipy.stats.iqr(RMSE_list),2), 'RMSE_list exposed')    
+    print(np.around(np.mean(RMSE2_list),2),' & ' , np.around(np.std(RMSE2_list),2),' & ' , np.around(np.max(RMSE2_list),2),' & ' , np.around(np.min(RMSE2_list),2),' & ' ,  np.around(scipy.stats.iqr(RMSE2_list),2), 'NRMSE2 Naive')    
     
     sparse_plot=5
     for i in range(b):
